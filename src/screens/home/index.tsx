@@ -1,16 +1,19 @@
-import { View, Text, Button } from 'react-native'
-import React from 'react'
+import { View, Text, Button } from 'react-native';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {
-        const navigation = useNavigation();
-    
+  const navigation = useNavigation();
+
   return (
-    <View  style={{marginTop: 200 }}>
+    <View style={{ marginTop: 200 }}>
       <Text>Home Screen</Text>
-      <Button  title="Login" onPress={() => {
-              navigation.goBack();
-            }} />
+      <Button
+        title="Login"
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
     </View>
-  )
-}
+  );
+};

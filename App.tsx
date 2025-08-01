@@ -8,10 +8,10 @@ function App() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-         <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
-    </View>    
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
+    </View>
   );
 }
 
