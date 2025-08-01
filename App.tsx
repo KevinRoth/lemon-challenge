@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { RootStack } from './src/navigation';
+import './global.css';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
