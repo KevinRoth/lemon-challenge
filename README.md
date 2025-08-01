@@ -6,10 +6,10 @@ LemonChallenge es un proyecto desarrollado como parte de un reto técnico. El ob
 
 ## Setup del proyecto
 
-### Requisitos previos
+### Versiones de paquetes
 
-- Node.js (versión recomendada: 16.x o superior)
-- npm (Node Package Manager)
+- Node.js v20.10.0
+- npm 10.2.3
 
 ### Instalación
 
