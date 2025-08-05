@@ -55,3 +55,21 @@ creo componente WalletScanner
 creo componente WalletHistory
 
 Agrego validaciones
+
+### Login
+
+Instalo rtk query y react-redux para manejar fetchs y store
+
+Instalo async-storage para guardar data localmente
+
+Creo proyecto nuevo en google dev console lemon-challenge
+
+Completo datos de pantalla de consentimiento
+
+Creo oAuth id para android y ios
+
+para android, necesito el sha-1, lo genero con ./gradlew signingReport
+
+Instalo @react-native-google-signin/google-signin
+
+Configurar google sign in agregando google-services.json
