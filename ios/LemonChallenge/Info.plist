@@ -53,5 +53,10 @@
     <array>
         <string>FontAwesome.ttf</string>
     </array>
+	<key>NSCameraUsageDescription</key>
+	<string>Lemon Challenge necesita acceso a la cámara</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Lemon Challenge necesita acceso a la biblioteca de fotos</string>
 </dict>
 </plist>

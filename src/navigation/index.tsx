@@ -4,6 +4,7 @@ import { LoginScreen } from '../screens/login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ThemedIcon from '../components/ThemedIcon';
 import { ExchangeScreen } from '../screens/exchange';
+import { WalletScannerScreen } from '../screens/walletScanner';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -13,6 +14,7 @@ export type RootStackParamList = {
 export type TabsStackParamList = {
   Home: undefined;
   Exchange: undefined;
+  WalletScanner: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -54,6 +56,16 @@ export const TabsStack = () => {
           tabBarInactiveTintColor: 'gray',
           tabBarIcon: ({ focused, size }) => (
             <TabIcon name="money" focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="WalletScanner"
+        component={WalletScannerScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, size }) => (
+            <TabIcon name="qrcode" focused={focused} size={size} />
           ),
         }}
       />
