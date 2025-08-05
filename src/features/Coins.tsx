@@ -15,12 +15,14 @@ interface CoinItem {
 interface CoinsProps {
   coins: CoinItem[];
   onSelect?: (coin: CoinItem) => void;
+  onEndReached?: () => void;
 }
 
-const Coins: React.FC<CoinsProps> = ({ coins, onSelect }) => (
+const Coins: React.FC<CoinsProps> = ({ coins, onSelect, onEndReached }) => (
   <FlatList
     data={coins}
     keyExtractor={item => item.id}
+    onEndReached={onEndReached}
     renderItem={({ item }) => (
       <TouchableOpacity disabled={!onSelect} onPress={() => onSelect?.(item)}>
         <ThemedItem

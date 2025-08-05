@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import {
-  TouchableOpacity,
-  View,
-  Modal,
-  ActivityIndicator,
-  Image,
-  Pressable,
-} from 'react-native';
+import { TouchableOpacity, View, Modal, Image, Pressable } from 'react-native';
 import { ThemedText } from '../components/ThemedText';
 import Coins from './Coins';
 import ThemedIcon from '../components/ThemedIcon';
+import ThemedSkeleton from '../components/ThemedSkeleton';
 
 interface Currency {
   id: string;
@@ -60,7 +54,6 @@ export const ExchangeCurrencySelector: React.FC<Props> = ({
         >
           <View
             className="bg-white rounded-t-xl p-md max-h-[70%]"
-            /* Prevent closing when pressing inside */
             onStartShouldSetResponder={() => true}
           >
             <View className="flex-row justify-end mb-xs">
@@ -69,7 +62,15 @@ export const ExchangeCurrencySelector: React.FC<Props> = ({
               </TouchableOpacity>
             </View>
             {loading ? (
-              <ActivityIndicator />
+              <>
+                <ThemedSkeleton className="mt-md" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+                <ThemedSkeleton className="mt-xs" width={350} height={80} />
+              </>
             ) : (
               <Coins
                 coins={coins}

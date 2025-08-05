@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Coins from './Coins';
+import ThemedSkeleton from '../components/ThemedSkeleton';
 import ThemedCategories from '../components/ThemedCategories';
 import ThemedInput from '../components/ThemedInput';
 import { Coin } from '../models';
@@ -195,10 +196,19 @@ const CoinsList: React.FC = () => {
           </TouchableOpacity>
         </ThemedAnimatedTranslateTop>
       )}
-      <Coins
-        coins={coins}
-        // No onSelect, solo visualización
-      />
+      {isLoading ? (
+        <>
+          <ThemedSkeleton className="mt-md" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+          <ThemedSkeleton className="mt-xs" width={350} height={80} />
+        </>
+      ) : (
+        <Coins coins={coins} onEndReached={onEndReached} />
+      )}
     </View>
   );
 };

@@ -31,3 +31,13 @@ Instalo rtk query y react-redux
 Agrego filtros
 
 Agrego libreria de iconos
+
+### Exchange
+
+Agrego tab navigator
+
+Creo apis para obtener monedas fiats, obtener lista de 100 criptos, obtener conversion de una cripto a fiat
+
+Creo componente Coins con la lista de criptos para que sea reutilizable en el exchangeconverter y coinslist
+
+Creo modal para mostrar listado de criptos / fiats
