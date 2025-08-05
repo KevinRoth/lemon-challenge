@@ -19,3 +19,15 @@ Defino una navegacion dinamica, con esto creo el stack de navegacion y luego se 
 ### Actualizo eslint
 
 extendiendo config de prettier, agrego auto format cuando guardo
+
+### Listado de coins
+
+Cree api key en coingecko, previo cree mi cuenta free https://docs.coingecko.com/reference/setting-up-your-api-key
+
+Busco esta api https://docs.coingecko.com/v3.0.1/reference/coins-markets
+
+Instalo rtk query y react-redux
+
+Agrego filtros
+
+Agrego libreria de iconos
