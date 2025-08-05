@@ -1,8 +1,12 @@
-# LemonChallenge
+# Lemon Challenge
 
 ## Descripción
 
 LemonChallenge es un proyecto desarrollado como parte de un reto técnico. El objetivo es demostrar habilidades en desarrollo de software, siguiendo las especificaciones y buenas prácticas solicitadas.
+
+## Demo
+
+[Video demo](./docs/demo.mp4)
 
 ## Setup del proyecto
 
@@ -16,7 +20,7 @@ LemonChallenge es un proyecto desarrollado como parte de un reto técnico. El ob
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/LemonChallenge.git
+   git clone https://github.com/KevinRoth/lemon-challenge
    cd LemonChallenge
    ```
 
@@ -37,6 +41,24 @@ Los siguientes comandos están definidos en el archivo `package.json`:
 - `npm test`: Ejecuta los tests con Jest.
 
 ### Cómo correr el proyecto
+
+Primero es necesario revisar el archivo .env-template, que es un template que me provee las distintas variables de entorno que tengo que usar:
+
+Debes crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+- **COINGECKO_API_KEY**
+  Obtén tu API Key gratuita en [CoinGecko API
+
+  ](https://docs.coingecko.com/reference/setting-up-your-api-key)
+
+- **COINGECKO_API**
+  La url es https://pro-api.coingecko.com/api/v3/
+- **GOOGLE_SIGNIN_WEB_CLIENT_ID**
+  Este valor lo obtienes desde la consola de Google Cloud, en el proyecto donde configuras OAuth para Google Sign-In.Ve a [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crea un OAuth Client ID tipo "Web" y copia el valor de `Client ID`.
+- **GOOGLE_IOS_CLIENT_ID**
+  Este valor lo obtienes desde la consola de Google Cloud, en el proyecto donde configuras OAuth para Google Sign-In.Ve a [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crea un OAuth Client ID tipo "IOS" y copia el valor de `Client ID`.
+
+Nota: si tienes un problema con los url schemes, es necesario realizar esta [configuración en xCode](https://react-native-google-signin.github.io/docs/setting-up/ios#xcode-configuration)
 
 #### iOS
 
@@ -77,3 +99,7 @@ Para verificar el estilo del código:
 ```bash
 npm run lint
 ```
+
+#### Crear build en android
+
+`cd android && ./gradlew clean && ./gradlew assembleRelease | ./gradlew assembleDebug`

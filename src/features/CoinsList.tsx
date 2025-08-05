@@ -50,7 +50,6 @@ const CoinsList: React.FC = () => {
   const [category, setCategory] = useState<CategoryType | ''>('');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Debounce search input
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
