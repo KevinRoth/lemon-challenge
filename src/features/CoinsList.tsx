@@ -1,0 +1,247 @@
+import React, { useState, useCallback } from 'react';
+import {
+  Image,
+  View,
+  FlatList,
+  ListRenderItem,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import ThemedItem from '../components/ThemedItem';
+import ThemedCategories from '../components/ThemedCategories';
+import ThemedInput from '../components/ThemedInput';
+import { Coin } from '../models';
+import { useGetCoinsQuery } from '../store/api';
+
+import type { OrderType, CategoryType } from '../store/api';
+import { ThemedText } from '../components/ThemedText';
+
+const ORDERS: { label: string; value: OrderType }[] = [
+  { label: 'Market Cap ↑', value: 'market_cap_asc' },
+  { label: 'Market Cap ↓', value: 'market_cap_desc' },
+  { label: 'Volume ↑', value: 'volume_asc' },
+  { label: 'Volume ↓', value: 'volume_desc' },
+  { label: 'ID ↑', value: 'id_asc' },
+  { label: 'ID ↓', value: 'id_desc' },
+];
+
+const CATEGORIES: { label: string; value: CategoryType | '' }[] = [
+  { label: 'Todas', value: '' },
+  { label: 'Ethereum', value: 'ethereum-ecosystem' },
+  { label: 'Cronos', value: 'cronos-ecosystem' },
+  { label: 'Polygon', value: 'polygon-ecosystem' },
+  { label: 'Stablecoins', value: 'stablecoins' },
+  { label: 'DEX', value: 'decentralized-exchange' },
+];
+
+const VARIATIONS = [
+  { label: 'Ganadores', value: 'positive' },
+  { label: 'Perdedores', value: 'negative' },
+];
+
+const CoinsList: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [order, setOrder] = useState<OrderType>('market_cap_desc');
+  const [priceMin, setPriceMin] = useState<string>('');
+  const [priceMax, setPriceMax] = useState<string>('');
+  const [variation, setVariation] = useState<'all' | 'positive' | 'negative'>(
+    'all',
+  );
+  const [refreshing, setRefreshing] = useState(false);
+  const [category, setCategory] = useState<CategoryType | ''>('');
+
+  const {
+    data = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCoinsQuery({
+    page,
+    per_page: 25,
+    order,
+    search: search.trim() ? search.trim().toLowerCase() : undefined,
+    category: category || undefined,
+  });
+
+  const [coins, setCoins] = useState<Coin[]>([]);
+
+  React.useEffect(() => {
+    if (isFetching) return;
+    if (page === 1) setCoins(data);
+    else if (page > 1 && data.length) setCoins(prev => [...prev, ...data]);
+  }, [data, page, isFetching]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setPage(1);
+    refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
+  const onEndReached = () => {
+    if (!isFetching && data.length === 25) setPage(p => p + 1);
+  };
+
+  const renderItem: ListRenderItem<Coin> = ({ item: coin }) => (
+    <ThemedItem
+      key={coin.id}
+      leftContainer={
+        <Image
+          source={{ uri: coin.image }}
+          className="w-12 h-12 rounded-full"
+          resizeMode="contain"
+        />
+      }
+      title={coin.name}
+      description={`$${coin.current_price}`}
+      rightContainer={
+        <View>
+          <ThemedText
+            type="body-2"
+            className={
+              coin.price_change_percentage_24h > 0
+                ? 'text-green-500'
+                : 'text-red-500'
+            }
+          >
+            {`${coin.price_change_percentage_24h?.toFixed(2)}% ${
+              coin.price_change_percentage_24h > 0 ? '↑' : '↓'
+            }`}
+          </ThemedText>
+        </View>
+      }
+    />
+  );
+
+  const resetFilters = () => {
+    setPage(1);
+    setSearch('');
+    setOrder('market_cap_desc');
+    setPriceMin('');
+    setPriceMax('');
+    setVariation('all');
+    setCategory('');
+  };
+
+  return (
+    <View className="flex-1">
+      <View className="flex-row mb-xs">
+        <ThemedInput
+          placeholder="Buscar por nombre completo"
+          value={search}
+          onChangeText={setSearch}
+          className="flex-1 mr-1"
+          returnKeyType="search"
+          onSubmitEditing={() => {
+            setPage(1);
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setPage(1);
+            refetch();
+          }}
+        >
+          <ThemedText type="body-1" className="p-xs text-primary">
+            Buscar
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
+      <View className="mb-xs">
+        <ThemedText type="body-1" className="mb-1">
+          Orden:
+        </ThemedText>
+        <ThemedCategories
+          categories={ORDERS}
+          selected={order}
+          onSelect={value => {
+            setOrder(value as OrderType);
+            setPage(1);
+          }}
+        />
+      </View>
+      <View className="flex-row mb-xs items-center">
+        <ThemedInput
+          placeholder="Precio min"
+          value={priceMin}
+          onChangeText={setPriceMin}
+          keyboardType="numeric"
+          className="flex-1 mr-1"
+        />
+        <ThemedInput
+          placeholder="Precio max"
+          value={priceMax}
+          onChangeText={setPriceMax}
+          keyboardType="numeric"
+          className="flex-1 mr-1"
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setPage(1);
+          }}
+        >
+          <ThemedText type="body-1" className="p-xs text-primary">
+            Filtrar
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
+      <View className="flex-row my-sm items-center">
+        <ThemedCategories
+          categories={VARIATIONS}
+          selected={variation === 'all' ? '' : variation}
+          onSelect={value => {
+            setVariation(value as 'positive' | 'negative');
+            setPage(1);
+          }}
+        />
+      </View>
+      <View className="mb-xs">
+        <ThemedText type="body-1" className="my-sm">
+          Marketplaces por categoría:
+        </ThemedText>
+        <ThemedCategories
+          categories={CATEGORIES}
+          selected={category}
+          onSelect={value => {
+            setCategory(value as CategoryType);
+            setPage(1);
+          }}
+        />
+      </View>
+      <TouchableOpacity
+        onPress={resetFilters}
+        className="mb-xs p-xs bg-secondary-50 rounded"
+      >
+        <ThemedText className="text-center text-secondary-500">
+          Resetear búsqueda
+        </ThemedText>
+      </TouchableOpacity>
+      <FlatList
+        data={coins}
+        renderItem={renderItem}
+        keyExtractor={coin => coin.id}
+        ItemSeparatorComponent={() => <View className="h-2" />}
+        initialNumToRender={15}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.8}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing || isFetching}
+            onRefresh={onRefresh}
+          />
+        }
+        ListEmptyComponent={
+          !isLoading && (
+            <ThemedText type="body-1" className="text-center mt-md">
+              No hay resultados
+            </ThemedText>
+          )
+        }
+      />
+    </View>
+  );
+};
+
+export default CoinsList;
