@@ -10,7 +10,7 @@ import { ThemedText } from './ThemedText';
 
 interface Props extends PressableProps {
   children: string;
-  type: 'primary' | 'secondary' | 'accent' | 'custom';
+  type: 'primary' | 'secondary' | 'custom';
   customTypeColor?: string;
   customTypeActiveColor?: string;
   textColor?: string;
@@ -31,15 +31,13 @@ const ThemedButton = ({
 }: Props) => {
   const getType: Record<Props['type'], string> = {
     primary: 'bg-primary-500',
-    secondary: 'bg-white border-2 border-secondary-200',
-    accent: 'bg-accent-500',
+    secondary: 'bg-white ',
     custom: customTypeColor || 'bg-primary-500',
   };
 
   const getActiveType: Record<Props['type'], string> = {
     primary: 'active:bg-primary-300',
-    secondary: 'active:bg-secondary-300',
-    accent: 'active:bg-accent-300',
+    secondary: 'active:bg-secondary-50',
     custom: customTypeActiveColor || 'active:bg-primary-300',
   };
 

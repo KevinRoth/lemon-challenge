@@ -3,8 +3,8 @@ import { HomeScreen } from '../screens/home';
 import { LoginScreen } from '../screens/login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ThemedIcon from '../components/ThemedIcon';
+import { ExchangeScreen } from '../screens/exchange';
 
-// Define param lists for navigation
 export type RootStackParamList = {
   Login: undefined;
   Authenticated: undefined;
@@ -12,6 +12,7 @@ export type RootStackParamList = {
 
 export type TabsStackParamList = {
   Home: undefined;
+  Exchange: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,6 +42,18 @@ export const TabsStack = () => {
           tabBarInactiveTintColor: 'gray',
           tabBarIcon: ({ focused, size }) => (
             <TabIcon name="home" focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Exchange"
+        component={ExchangeScreen}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: '#a259e6',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused, size }) => (
+            <TabIcon name="money" focused={focused} size={size} />
           ),
         }}
       />

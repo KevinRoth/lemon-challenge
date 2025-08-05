@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Image,
-  View,
-  FlatList,
-  ListRenderItem,
-  TouchableOpacity,
-} from 'react-native';
-import ThemedItem from '../components/ThemedItem';
+import { View, TouchableOpacity } from 'react-native';
+import Coins from './Coins';
 import ThemedCategories from '../components/ThemedCategories';
 import ThemedInput from '../components/ThemedInput';
 import { Coin } from '../models';
 import { useGetCoinsQuery } from '../store/api';
 
-import type { OrderType, CategoryType } from '../store/api';
+import type { OrderType, CategoryType } from '../models/index';
 import { ThemedText } from '../components/ThemedText';
 import ThemedAnimatedTranslateTop from '../components/ThemedAnimatedTranslateTop';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -82,35 +76,6 @@ const CoinsList: React.FC = () => {
     if (!isFetching && data.length === 25) setPage(p => p + 1);
   };
 
-  const renderItem: ListRenderItem<Coin> = ({ item: coin }) => {
-    const textColorPriceChange =
-      coin?.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500';
-
-    return (
-      <ThemedItem
-        key={coin?.id}
-        leftContainer={
-          <Image
-            source={{ uri: coin?.image }}
-            className="w-12 h-12 rounded-full"
-            resizeMode="contain"
-          />
-        }
-        title={coin?.name}
-        description={`$${coin?.current_price}`}
-        rightContainer={
-          <View>
-            <ThemedText type="body-2" color={textColorPriceChange}>
-              {`${coin?.price_change_percentage_24h?.toFixed(2)}% ${
-                coin?.price_change_percentage_24h > 0 ? '↑' : '↓'
-              }`}
-            </ThemedText>
-          </View>
-        }
-      />
-    );
-  };
-
   const resetFilters = () => {
     setPage(1);
     setSearch('');
@@ -134,9 +99,19 @@ const CoinsList: React.FC = () => {
             setPage(1);
           }}
         />
+        <TouchableOpacity
+          onPress={() => {
+            setPage(1);
+            refetch();
+          }}
+        >
+          <ThemedText type="body-1" className="p-xs text-primary">
+            Buscar
+          </ThemedText>
+        </TouchableOpacity>
       </View>
 
-      <View className="flex-row my-xs mx-xs">
+      <View className="flex-row mb-xs mx-xs">
         <Icon
           onPress={() => setShowFilters(prev => !prev)}
           name="sliders"
@@ -172,6 +147,16 @@ const CoinsList: React.FC = () => {
               keyboardType="numeric"
               className="flex-1 mr-1"
             />
+            <TouchableOpacity
+              onPress={() => {
+                setPage(1);
+                setPerPage(100);
+              }}
+            >
+              <ThemedText type="body-1" className="p-xs text-primary">
+                Filtrar
+              </ThemedText>
+            </TouchableOpacity>
           </View>
           <View className="flex-row my-sm items-center">
             <ThemedCategories
@@ -210,20 +195,9 @@ const CoinsList: React.FC = () => {
           </TouchableOpacity>
         </ThemedAnimatedTranslateTop>
       )}
-      <FlatList
-        data={coins}
-        renderItem={renderItem}
-        keyExtractor={coin => coin.id}
-        initialNumToRender={15}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.8}
-        ListEmptyComponent={
-          !isLoading ? (
-            <ThemedText type="body-1" className="text-center mt-md">
-              No hay resultados
-            </ThemedText>
-          ) : null
-        }
+      <Coins
+        coins={coins}
+        // No onSelect, solo visualización
       />
     </View>
   );
