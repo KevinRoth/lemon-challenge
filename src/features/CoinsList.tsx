@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Coins from './Coins';
 import ThemedSkeleton from '../components/ThemedSkeleton';
@@ -39,6 +39,7 @@ const CoinsList: React.FC = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [order, setOrder] = useState<OrderType>('market_cap_desc');
   const [priceMin, setPriceMin] = useState<string>('');
   const [priceMax, setPriceMax] = useState<string>('');
@@ -49,6 +50,15 @@ const CoinsList: React.FC = () => {
   const [category, setCategory] = useState<CategoryType | ''>('');
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+      refetch();
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [search]);
+
   const {
     data = [],
     isLoading,
@@ -58,7 +68,9 @@ const CoinsList: React.FC = () => {
     page,
     per_page: perPage,
     order,
-    search: search.trim() ? search.trim().toLowerCase() : undefined,
+    search: debouncedSearch.trim()
+      ? debouncedSearch.trim().toLowerCase()
+      : undefined,
     category: category || undefined,
     variation: variation === 'all' ? undefined : variation,
     price_min: priceMin ? Number(priceMin) : undefined,
@@ -96,20 +108,7 @@ const CoinsList: React.FC = () => {
           onChangeText={setSearch}
           className="flex-1 mr-1"
           returnKeyType="search"
-          onSubmitEditing={() => {
-            setPage(1);
-          }}
         />
-        <TouchableOpacity
-          onPress={() => {
-            setPage(1);
-            refetch();
-          }}
-        >
-          <ThemedText type="body-1" className="p-xs text-primary">
-            Buscar
-          </ThemedText>
-        </TouchableOpacity>
       </View>
 
       <View className="flex-row mb-xs mx-xs justify-between">

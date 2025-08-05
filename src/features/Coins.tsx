@@ -2,7 +2,6 @@ import React from 'react';
 import { FlatList, TouchableOpacity, Image, View } from 'react-native';
 import ThemedItem from '../components/ThemedItem';
 import { ThemedText } from '../components/ThemedText';
-import EmptyImg from '../assets/empty.png'; // Asegúrate de tener esta imagen en assets
 import { SearchImg } from '../assets';
 import ThemedButton from '../components/ThemedButton';
 
@@ -30,7 +29,7 @@ const Coins: React.FC<CoinsProps> = ({
 }) => (
   <FlatList
     data={coins}
-    keyExtractor={item => item.id}
+    keyExtractor={item => `${item.id}-${Date.now()}`}
     onEndReached={onEndReached}
     renderItem={({ item }) => (
       <TouchableOpacity disabled={!onSelect} onPress={() => onSelect?.(item)}>
