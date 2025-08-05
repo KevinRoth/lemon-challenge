@@ -1,12 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   View,
   FlatList,
   ListRenderItem,
-  Text,
   TouchableOpacity,
-  RefreshControl,
 } from 'react-native';
 import ThemedItem from '../components/ThemedItem';
 import ThemedCategories from '../components/ThemedCategories';
@@ -44,6 +42,7 @@ const VARIATIONS = [
 
 const CoinsList: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState('');
   const [order, setOrder] = useState<OrderType>('market_cap_desc');
   const [priceMin, setPriceMin] = useState<string>('');
@@ -51,7 +50,7 @@ const CoinsList: React.FC = () => {
   const [variation, setVariation] = useState<'all' | 'positive' | 'negative'>(
     'all',
   );
-  const [refreshing, setRefreshing] = useState(false);
+
   const [category, setCategory] = useState<CategoryType | ''>('');
   const [showFilters, setShowFilters] = useState(false);
 
@@ -62,10 +61,13 @@ const CoinsList: React.FC = () => {
     refetch,
   } = useGetCoinsQuery({
     page,
-    per_page: 25,
+    per_page: perPage,
     order,
     search: search.trim() ? search.trim().toLowerCase() : undefined,
     category: category || undefined,
+    variation: variation === 'all' ? undefined : variation,
+    price_min: priceMin ? Number(priceMin) : undefined,
+    price_max: priceMax ? Number(priceMax) : undefined,
   });
 
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -75,13 +77,6 @@ const CoinsList: React.FC = () => {
     if (page === 1) setCoins(data);
     else if (page > 1 && data.length) setCoins(prev => [...prev, ...data]);
   }, [data, page, isFetching]);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setPage(1);
-    refetch();
-    setRefreshing(false);
-  }, [refetch]);
 
   const onEndReached = () => {
     if (!isFetching && data.length === 25) setPage(p => p + 1);
@@ -139,19 +134,9 @@ const CoinsList: React.FC = () => {
             setPage(1);
           }}
         />
-        <TouchableOpacity
-          onPress={() => {
-            setPage(1);
-            refetch();
-          }}
-        >
-          <ThemedText type="body-1" className="p-xs text-primary">
-            Buscar
-          </ThemedText>
-        </TouchableOpacity>
       </View>
 
-      <View className="flex-row mb-xs mx-xs">
+      <View className="flex-row my-xs mx-xs">
         <Icon
           onPress={() => setShowFilters(prev => !prev)}
           name="sliders"
@@ -162,10 +147,7 @@ const CoinsList: React.FC = () => {
 
       {showFilters && (
         <ThemedAnimatedTranslateTop>
-          <View className="mb-xs">
-            <ThemedText type="body-1" className="mb-1">
-              Orden:
-            </ThemedText>
+          <View className="my-sm">
             <ThemedCategories
               categories={ORDERS}
               selected={order}
@@ -190,15 +172,6 @@ const CoinsList: React.FC = () => {
               keyboardType="numeric"
               className="flex-1 mr-1"
             />
-            <TouchableOpacity
-              onPress={() => {
-                setPage(1);
-              }}
-            >
-              <ThemedText type="body-1" className="p-xs text-primary">
-                Filtrar
-              </ThemedText>
-            </TouchableOpacity>
           </View>
           <View className="flex-row my-sm items-center">
             <ThemedCategories
@@ -207,11 +180,12 @@ const CoinsList: React.FC = () => {
               onSelect={value => {
                 setVariation(value as 'positive' | 'negative');
                 setPage(1);
+                setPerPage(100);
               }}
             />
           </View>
-          <View className="mb-xs">
-            <ThemedText type="body-1" className="my-sm">
+          <View>
+            <ThemedText type="body-1" className="mb-sm">
               Marketplaces por categoría:
             </ThemedText>
             <ThemedCategories
@@ -225,7 +199,7 @@ const CoinsList: React.FC = () => {
           </View>
           <TouchableOpacity
             onPress={resetFilters}
-            className="mb-xs p-xs bg-secondary-50 rounded"
+            className="my-xs p-xs bg-secondary-50 rounded"
           >
             <ThemedText
               type="body-1"
@@ -243,12 +217,6 @@ const CoinsList: React.FC = () => {
         initialNumToRender={15}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.8}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing || isFetching}
-            onRefresh={onRefresh}
-          />
-        }
         ListEmptyComponent={
           !isLoading ? (
             <ThemedText type="body-1" className="text-center mt-md">

@@ -27,3 +27,7 @@ Cree api key en coingecko, previo cree mi cuenta free https://docs.coingecko.com
 Busco esta api https://docs.coingecko.com/v3.0.1/reference/coins-markets
 
 Instalo rtk query y react-redux
+
+Agrego filtros
+
+Agrego libreria de iconos

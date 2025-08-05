@@ -22,6 +22,7 @@ const ThemedCategories: React.FC<ThemedCategoriesProps> = ({
       data={categories}
       horizontal
       showsHorizontalScrollIndicator={false}
+      className="bg-secondary-50"
       keyExtractor={item => String(item.value)}
       contentContainerStyle={{ gap: 8 }}
       renderItem={({ item }) => (

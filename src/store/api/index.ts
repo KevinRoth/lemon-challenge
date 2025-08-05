@@ -84,10 +84,22 @@ export const coinGeckoSlice = createApi({
           data = data.filter(c => c.current_price <= arg.price_max!);
         }
         if (arg?.variation === 'positive') {
-          data = data.filter(c => c.price_change_percentage_24h > 0);
+          data = data
+            .filter(c => c.price_change_percentage_24h > 0)
+            .sort((a, b) => {
+              return (
+                b.price_change_percentage_24h - a.price_change_percentage_24h
+              );
+            });
         }
         if (arg?.variation === 'negative') {
-          data = data.filter(c => c.price_change_percentage_24h < 0);
+          data = data
+            .filter(c => c.price_change_percentage_24h < 0)
+            .sort((a, b) => {
+              return (
+                a.price_change_percentage_24h - b.price_change_percentage_24h
+              );
+            });
         }
 
         if (response.length > 0) {

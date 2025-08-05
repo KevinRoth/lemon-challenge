@@ -17,7 +17,7 @@ const ThemedAnimatedTranslateTop = ({ children, className }: Props) => {
       easing: Easing.bounce,
       duration: 700,
     });
-  }, [fadeIn, startMovingTopPosition]);
+  }, []);
 
   return (
     <Animated.View
