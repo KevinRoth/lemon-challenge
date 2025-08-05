@@ -208,7 +208,13 @@ const CoinsList: React.FC = () => {
           <ThemedSkeleton className="mt-xs" width={350} height={80} />
         </>
       ) : (
-        <Coins coins={coins} onEndReached={onEndReached} />
+        <Coins
+          coins={coins}
+          onEndReached={onEndReached}
+          onRetry={() => {
+            setSearch('');
+          }}
+        />
       )}
     </View>
   );

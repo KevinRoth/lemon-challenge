@@ -2,6 +2,9 @@ import React from 'react';
 import { FlatList, TouchableOpacity, Image, View } from 'react-native';
 import ThemedItem from '../components/ThemedItem';
 import { ThemedText } from '../components/ThemedText';
+import EmptyImg from '../assets/empty.png'; // Asegúrate de tener esta imagen en assets
+import { SearchImg } from '../assets';
+import ThemedButton from '../components/ThemedButton';
 
 interface CoinItem {
   id: string;
@@ -16,9 +19,15 @@ interface CoinsProps {
   coins: CoinItem[];
   onSelect?: (coin: CoinItem) => void;
   onEndReached?: () => void;
+  onRetry?: () => void;
 }
 
-const Coins: React.FC<CoinsProps> = ({ coins, onSelect, onEndReached }) => (
+const Coins: React.FC<CoinsProps> = ({
+  coins,
+  onSelect,
+  onEndReached,
+  onRetry,
+}) => (
   <FlatList
     data={coins}
     keyExtractor={item => item.id}
@@ -34,7 +43,7 @@ const Coins: React.FC<CoinsProps> = ({ coins, onSelect, onEndReached }) => (
               />
             ) : null
           }
-          title={item.symbol?.toUpperCase() || item.name}
+          title={`${item.symbol?.toUpperCase()} - ${item.name}`}
           description={
             item.current_price !== undefined
               ? `$${item.current_price}`
@@ -61,6 +70,25 @@ const Coins: React.FC<CoinsProps> = ({ coins, onSelect, onEndReached }) => (
     )}
     ItemSeparatorComponent={() => <View className="h-2" />}
     initialNumToRender={15}
+    ListEmptyComponent={
+      <View className="items-center justify-center mt-md">
+        <Image source={SearchImg} className="w-24 h-24 my-sm" />
+        <ThemedText
+          type="body-2"
+          className="text-center text-secondary-200 mt-md"
+        >
+          No hay criptomonedas para tu búsqueda
+        </ThemedText>
+        <ThemedButton
+          type="secondary"
+          textColor="text-primary-500"
+          className="mt-md"
+          onPress={onRetry}
+        >
+          Volver a intentar
+        </ThemedButton>
+      </View>
+    }
   />
 );
 

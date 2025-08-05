@@ -43,3 +43,15 @@ Creo componente Coins con la lista de criptos para que sea reutilizable en el ex
 Creo modal para mostrar listado de criptos / fiats
 
 Agrego estado loading
+
+QR Scanner
+
+Agrego librerias async storage y react-native-camera-kit
+
+creo pantalla walletscanner
+
+creo componente WalletScanner
+
+creo componente WalletHistory
+
+Agrego validaciones
