@@ -16,6 +16,8 @@ import { useGetCoinsQuery } from '../store/api';
 
 import type { OrderType, CategoryType } from '../store/api';
 import { ThemedText } from '../components/ThemedText';
+import ThemedAnimatedTranslateTop from '../components/ThemedAnimatedTranslateTop';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ORDERS: { label: string; value: OrderType }[] = [
   { label: 'Market Cap ↑', value: 'market_cap_asc' },
@@ -51,6 +53,7 @@ const CoinsList: React.FC = () => {
   );
   const [refreshing, setRefreshing] = useState(false);
   const [category, setCategory] = useState<CategoryType | ''>('');
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
     data = [],
@@ -84,36 +87,34 @@ const CoinsList: React.FC = () => {
     if (!isFetching && data.length === 25) setPage(p => p + 1);
   };
 
-  const renderItem: ListRenderItem<Coin> = ({ item: coin }) => (
-    <ThemedItem
-      key={coin.id}
-      leftContainer={
-        <Image
-          source={{ uri: coin.image }}
-          className="w-12 h-12 rounded-full"
-          resizeMode="contain"
-        />
-      }
-      title={coin.name}
-      description={`$${coin.current_price}`}
-      rightContainer={
-        <View>
-          <ThemedText
-            type="body-2"
-            className={
-              coin.price_change_percentage_24h > 0
-                ? 'text-green-500'
-                : 'text-red-500'
-            }
-          >
-            {`${coin.price_change_percentage_24h?.toFixed(2)}% ${
-              coin.price_change_percentage_24h > 0 ? '↑' : '↓'
-            }`}
-          </ThemedText>
-        </View>
-      }
-    />
-  );
+  const renderItem: ListRenderItem<Coin> = ({ item: coin }) => {
+    const textColorPriceChange =
+      coin?.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500';
+
+    return (
+      <ThemedItem
+        key={coin?.id}
+        leftContainer={
+          <Image
+            source={{ uri: coin?.image }}
+            className="w-12 h-12 rounded-full"
+            resizeMode="contain"
+          />
+        }
+        title={coin?.name}
+        description={`$${coin?.current_price}`}
+        rightContainer={
+          <View>
+            <ThemedText type="body-2" color={textColorPriceChange}>
+              {`${coin?.price_change_percentage_24h?.toFixed(2)}% ${
+                coin?.price_change_percentage_24h > 0 ? '↑' : '↓'
+              }`}
+            </ThemedText>
+          </View>
+        }
+      />
+    );
+  };
 
   const resetFilters = () => {
     setPage(1);
@@ -149,80 +150,96 @@ const CoinsList: React.FC = () => {
           </ThemedText>
         </TouchableOpacity>
       </View>
-      <View className="mb-xs">
-        <ThemedText type="body-1" className="mb-1">
-          Orden:
-        </ThemedText>
-        <ThemedCategories
-          categories={ORDERS}
-          selected={order}
-          onSelect={value => {
-            setOrder(value as OrderType);
-            setPage(1);
-          }}
+
+      <View className="flex-row mb-xs mx-xs">
+        <Icon
+          onPress={() => setShowFilters(prev => !prev)}
+          name="sliders"
+          size={30}
+          color="#a259e6"
         />
       </View>
-      <View className="flex-row mb-xs items-center">
-        <ThemedInput
-          placeholder="Precio min"
-          value={priceMin}
-          onChangeText={setPriceMin}
-          keyboardType="numeric"
-          className="flex-1 mr-1"
-        />
-        <ThemedInput
-          placeholder="Precio max"
-          value={priceMax}
-          onChangeText={setPriceMax}
-          keyboardType="numeric"
-          className="flex-1 mr-1"
-        />
-        <TouchableOpacity
-          onPress={() => {
-            setPage(1);
-          }}
-        >
-          <ThemedText type="body-1" className="p-xs text-primary">
-            Filtrar
-          </ThemedText>
-        </TouchableOpacity>
-      </View>
-      <View className="flex-row my-sm items-center">
-        <ThemedCategories
-          categories={VARIATIONS}
-          selected={variation === 'all' ? '' : variation}
-          onSelect={value => {
-            setVariation(value as 'positive' | 'negative');
-            setPage(1);
-          }}
-        />
-      </View>
-      <View className="mb-xs">
-        <ThemedText type="body-1" className="my-sm">
-          Marketplaces por categoría:
-        </ThemedText>
-        <ThemedCategories
-          categories={CATEGORIES}
-          selected={category}
-          onSelect={value => {
-            setCategory(value as CategoryType);
-            setPage(1);
-          }}
-        />
-      </View>
-      <TouchableOpacity
-        onPress={resetFilters}
-        className="mb-xs p-xs bg-secondary-50 rounded"
-      >
-        <ThemedText className="text-center text-secondary-500">
-          Resetear búsqueda
-        </ThemedText>
-      </TouchableOpacity>
+
+      {showFilters && (
+        <ThemedAnimatedTranslateTop>
+          <View className="mb-xs">
+            <ThemedText type="body-1" className="mb-1">
+              Orden:
+            </ThemedText>
+            <ThemedCategories
+              categories={ORDERS}
+              selected={order}
+              onSelect={value => {
+                setOrder(value as OrderType);
+                setPage(1);
+              }}
+            />
+          </View>
+          <View className="flex-row mb-xs items-center">
+            <ThemedInput
+              placeholder="Precio min"
+              value={priceMin}
+              onChangeText={setPriceMin}
+              keyboardType="numeric"
+              className="flex-1 mr-1"
+            />
+            <ThemedInput
+              placeholder="Precio max"
+              value={priceMax}
+              onChangeText={setPriceMax}
+              keyboardType="numeric"
+              className="flex-1 mr-1"
+            />
+            <TouchableOpacity
+              onPress={() => {
+                setPage(1);
+              }}
+            >
+              <ThemedText type="body-1" className="p-xs text-primary">
+                Filtrar
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+          <View className="flex-row my-sm items-center">
+            <ThemedCategories
+              categories={VARIATIONS}
+              selected={variation === 'all' ? '' : variation}
+              onSelect={value => {
+                setVariation(value as 'positive' | 'negative');
+                setPage(1);
+              }}
+            />
+          </View>
+          <View className="mb-xs">
+            <ThemedText type="body-1" className="my-sm">
+              Marketplaces por categoría:
+            </ThemedText>
+            <ThemedCategories
+              categories={CATEGORIES}
+              selected={category}
+              onSelect={value => {
+                setCategory(value as CategoryType);
+                setPage(1);
+              }}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={resetFilters}
+            className="mb-xs p-xs bg-secondary-50 rounded"
+          >
+            <ThemedText
+              type="body-1"
+              className="text-center text-secondary-500"
+            >
+              Resetear búsqueda
+            </ThemedText>
+          </TouchableOpacity>
+        </ThemedAnimatedTranslateTop>
+      )}
       <FlatList
         data={coins}
         renderItem={renderItem}
         keyExtractor={coin => coin.id}
-        ItemSeparatorComponent={() => <View className="h-2" />}
         initialNumToRender={15}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.8}
@@ -233,11 +250,11 @@ const CoinsList: React.FC = () => {
           />
         }
         ListEmptyComponent={
-          !isLoading && (
+          !isLoading ? (
             <ThemedText type="body-1" className="text-center mt-md">
               No hay resultados
             </ThemedText>
-          )
+          ) : null
         }
       />
     </View>
