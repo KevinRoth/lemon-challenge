@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setCredentials } from '../store/authSlice';
 import { useNavigation } from '@react-navigation/native';
+import { SettingsScreen } from '../screens/settings';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -23,6 +24,7 @@ export type TabsStackParamList = {
   Home: undefined;
   Exchange: undefined;
   WalletScanner: undefined;
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +78,18 @@ export const TabsStack = () => {
           tabBarInactiveTintColor: 'gray',
           tabBarIcon: ({ focused, size }) => (
             <TabIcon name="qrcode" focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: '#a259e6',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused, size }) => (
+            <TabIcon name="cog" focused={focused} size={size} />
           ),
         }}
       />
