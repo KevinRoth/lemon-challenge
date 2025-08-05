@@ -64,6 +64,8 @@ export const TabsStack = () => {
         component={WalletScannerScreen}
         options={{
           headerShown: false,
+          tabBarActiveTintColor: '#a259e6',
+          tabBarInactiveTintColor: 'gray',
           tabBarIcon: ({ focused, size }) => (
             <TabIcon name="qrcode" focused={focused} size={size} />
           ),

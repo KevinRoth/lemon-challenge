@@ -7,6 +7,7 @@ interface ThemedItemProps {
   rightContainer?: React.ReactNode;
   title: string;
   description?: string;
+  bgColor?: string;
 }
 
 const ThemedItem = ({
@@ -14,9 +15,10 @@ const ThemedItem = ({
   rightContainer,
   title,
   description = '',
+  bgColor = 'bg-white',
 }: ThemedItemProps) => {
   return (
-    <View className="flex-row p-sm mt-xs items-center bg-white rounded-xl">
+    <View className={`flex-row p-sm mt-xs items-center rounded-xl ${bgColor}`}>
       {leftContainer && <View className="mr-xs">{leftContainer}</View>}
       <View className="ml-xs flex-1 justify-center">
         <ThemedText
