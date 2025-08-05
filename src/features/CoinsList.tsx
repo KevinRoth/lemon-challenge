@@ -112,7 +112,8 @@ const CoinsList: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="flex-row mb-xs mx-xs">
+      <View className="flex-row mb-xs mx-xs justify-between">
+        <View />
         <Icon
           onPress={() => setShowFilters(prev => !prev)}
           name="sliders"
