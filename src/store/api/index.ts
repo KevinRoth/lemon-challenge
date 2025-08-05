@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { COINGECKO_API_KEY } from '@env';
-import { Coin } from '../../models';
+import { Coin, FiatCurrency, PriceResponse, SimpleCoin } from '../../models';
 import { BaseQueryApi, FetchArgs } from '@reduxjs/toolkit/query';
+import { GetCoinsParams, PriceParams } from '../../models/params';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'https://api.coingecko.com/api/v3',
@@ -16,37 +17,11 @@ const wrappedBaseQuery = async (
   api: BaseQueryApi,
   extraOptions: object,
 ) => {
-  console.log('RTK Query Request:', args); // Log the request details
+  console.log('RTK Query Request:', args);
   const result = await baseQuery(args, api, extraOptions);
-  console.log('RTK Query Response:', result); // Log the response details
+  console.log('RTK Query Response:', result);
   return result;
 };
-
-export type OrderType =
-  | 'id_asc'
-  | 'id_desc'
-  | 'market_cap_asc'
-  | 'market_cap_desc'
-  | 'volume_asc'
-  | 'volume_desc';
-
-export type CategoryType =
-  | 'ethereum-ecosystem'
-  | 'cronos-ecosystem'
-  | 'polygon-ecosystem'
-  | 'stablecoins'
-  | 'decentralized-exchange';
-
-interface GetCoinsParams {
-  page?: number;
-  per_page?: number;
-  order?: OrderType;
-  search?: string;
-  price_min?: number;
-  price_max?: number;
-  variation?: 'positive' | 'negative';
-  category?: CategoryType;
-}
 
 export const coinGeckoSlice = createApi({
   reducerPath: 'api',
@@ -67,10 +42,8 @@ export const coinGeckoSlice = createApi({
         let url = `/coins/markets?vs_currency=usd&page=${page}&per_page=${per_page}&order=${order}&include_tokens=top`;
         if (search) url += `&ids=${encodeURIComponent(search)}`;
         if (category) url += `&category=${encodeURIComponent(category)}`; // <-- agregado
-        // Filters will be applied client-side as CoinGecko API doesn't support price/variation filters directly
         return url;
       },
-      // Optionally, transform response for client-side filtering
       transformResponse: (
         response: Coin[],
         meta,
@@ -111,8 +84,40 @@ export const coinGeckoSlice = createApi({
         return data;
       },
     }),
+    getSupportedCoins: builder.query<SimpleCoin[], void>({
+      query: () =>
+        '/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1',
+      transformResponse: (response: any[]) =>
+        response.map(c => ({
+          id: c.id,
+          symbol: c.symbol,
+          name: c.name,
+          image: c.image,
+          price_change_percentage_24h: c.price_change_percentage_24h,
+          current_price: c.current_price,
+        })),
+    }),
+    getSupportedFiats: builder.query<FiatCurrency[], void>({
+      query: () => '/simple/supported_vs_currencies',
+      transformResponse: (response: string[]) =>
+        response
+          .filter(f => ['usd', 'eur', 'ars', 'pen'].includes(f.toLowerCase()))
+          .map(f => ({
+            id: f,
+            symbol: f.toUpperCase(),
+            name: f.toUpperCase(),
+          })),
+    }),
+    getPrice: builder.query<PriceResponse, PriceParams>({
+      query: ({ ids, vs_currencies }) =>
+        `/simple/price?ids=${ids}&vs_currencies=${vs_currencies}`,
+    }),
   }),
 });
 
-// Export auto-generated hooks
-export const { useGetCoinsQuery } = coinGeckoSlice;
+export const {
+  useGetCoinsQuery,
+  useGetSupportedCoinsQuery,
+  useGetSupportedFiatsQuery,
+  useGetPriceQuery,
+} = coinGeckoSlice;
