@@ -69,3 +69,7 @@ para android, necesito el sha-1, lo genero con ./gradlew signingReport
 Instalo @react-native-google-signin/google-signin
 
 Modifico nombre de paquete para android, com.lemonlitechallenge, para ios no modifico nada
+
+Creo pantalla de login
+
+Logica de redireccion
