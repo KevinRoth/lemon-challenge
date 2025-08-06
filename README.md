@@ -46,60 +46,63 @@ Primero es necesario revisar el archivo .env-template, que es un template que me
 
 Debes crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
-- **COINGECKO_API_KEY**
-  Obtén tu API Key gratuita en [CoinGecko API
+- **COINGECKO_API_KEY**  
+  Obtén tu API Key gratuita en [CoinGecko API](https://www.coingecko.com/es/api/documentation).  
+  Ejemplo:
 
-  ](https://docs.coingecko.com/reference/setting-up-your-api-key)
+  ```
+  COINGECKO_API_KEY=tu_api_key_de_coingecko
+  ```
 
-- **COINGECKO_API**
-  La url es https://pro-api.coingecko.com/api/v3/
-- **GOOGLE_SIGNIN_WEB_CLIENT_ID**
-  Este valor lo obtienes desde la consola de Google Cloud, en el proyecto donde configuras OAuth para Google Sign-In.Ve a [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crea un OAuth Client ID tipo "Web" y copia el valor de `Client ID`.
-- **GOOGLE_IOS_CLIENT_ID**
-  Este valor lo obtienes desde la consola de Google Cloud, en el proyecto donde configuras OAuth para Google Sign-In.Ve a [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crea un OAuth Client ID tipo "IOS" y copia el valor de `Client ID`.
+- **GOOGLE_SIGNIN_WEB_CLIENT_ID**  
+  Este valor lo obtienes desde la consola de Google Cloud, en el proyecto donde configuras OAuth para Google Sign-In.  
+  Ve a [Google Cloud Console](https://console.cloud.google.com/apis/credentials), crea un OAuth Client ID tipo "Web" y copia el valor de `Client ID`.  
+  Ejemplo:
 
-Nota: si tienes un problema con los url schemes, es necesario realizar esta [configuración en xCode](https://react-native-google-signin.github.io/docs/setting-up/ios#xcode-configuration)
+  ```
+  GOOGLE_SIGNIN_WEB_CLIENT_ID=tu_client_id_web_google
+  ```
 
-#### iOS
+- **OTRAS VARIABLES**  
+  Si agregas otras integraciones (por ejemplo, endpoints personalizados), documenta aquí cómo y dónde obtenerlas.
 
-1. Instala las dependencias de CocoaPods:
-   ```bash
-   npx pod-install
-   ```
-2. Corre la app en el simulador iOS:
-   ```bash
-   npm run ios
-   ```
+> **Nota:**  
+> Después de modificar el archivo `.env`, reinicia el servidor de desarrollo para que los cambios tengan efecto.
 
-#### Android
+---
 
-1. Corre la app en un dispositivo o emulador Android:
-   ```bash
-   npm run android
-   ```
+## Librerías utilizadas
 
-#### Metro Bundler
+A continuación se listan las librerías agregadas al proyecto (además de las que incluye React Native CLI) y su propósito:
 
-Para iniciar el servidor Metro Bundler manualmente:
+- **@react-navigation/native, @react-navigation/native-stack, @react-navigation/bottom-tabs**  
+  Para la navegación entre pantallas y tabs de la app.
 
-```bash
-npm start
-```
+- **@reduxjs/toolkit, react-redux**  
+  Para manejo de estado global y slices (ej: autenticación, datos de usuario, etc).
 
-#### Tests y Lint
+- **@react-native-google-signin/google-signin**  
+  Para implementar autenticación segura con Google.
 
-Para ejecutar los tests:
+- **@react-native-async-storage/async-storage**  
+  Para almacenamiento local persistente (ej: historial de wallets escaneadas).
 
-```bash
-npm test
-```
+- **nativewind, tailwindcss**  
+  Para estilos rápidos y consistentes usando utilidades tipo Tailwind adaptadas a React Native.
 
-Para verificar el estilo del código:
+- **react-native-vector-icons**  
+  Para mostrar íconos en botones, tabs y otros componentes visuales.
 
-```bash
-npm run lint
-```
+- **react-native-camera-kit**  
+  Para escanear códigos QR de wallets usando la cámara del dispositivo.
 
-#### Crear build en android
+- **react-native-dotenv**  
+  Para cargar variables de entorno desde archivos `.env`.
 
-`cd android && ./gradlew clean && ./gradlew assembleRelease | ./gradlew assembleDebug`
+- **react-native-reanimated, react-native-screens, react-native-safe-area-context, react-native-worklets**  
+  Mejoras de performance, animaciones y manejo seguro de áreas de pantalla.
+
+- **@types/\***  
+  Paquetes de tipado TypeScript para las librerías utilizadas.
+
+Estas librerías permiten construir una app moderna, segura y con buena experiencia de usuario, cubriendo autenticación, navegación, manejo de estado, escaneo de QR, almacenamiento local y estilos.
